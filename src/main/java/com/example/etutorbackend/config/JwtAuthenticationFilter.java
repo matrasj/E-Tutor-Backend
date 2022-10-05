@@ -1,14 +1,13 @@
 package com.example.etutorbackend.config;
 
 
-import com.example.etutorbackend.service.ApplicationUserDetailsService;
+import com.example.etutorbackend.service.auth.ApplicationUserDetailsService;
 import com.example.etutorbackend.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;

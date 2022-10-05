@@ -1,16 +1,19 @@
-package com.example.etutorbackend.model.payload.auth;
+package com.example.etutorbackend.model.payload.auth.register;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserAuthPayloadResponse {
-    private Long id;
+@Data
+public class RegisterPayloadRequest {
+    private String firstName;
+    private String lastName;
     private String username;
+    private String password;
     private String email;
+
 }

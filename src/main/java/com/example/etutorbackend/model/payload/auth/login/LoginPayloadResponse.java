@@ -1,4 +1,4 @@
-package com.example.etutorbackend.model.payload.auth;
+package com.example.etutorbackend.model.payload.auth.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
