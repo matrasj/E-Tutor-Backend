@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserAuthPayloadResponse {
     private Long id;
+    private String firstName;
+    private String lastName;
     private String username;
     private String email;
 }

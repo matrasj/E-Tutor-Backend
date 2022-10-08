@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 log.error("Error");
             }
         } else {
-            if (!request.getServletPath().contains("api/v1/auth")) {
+            if (!request.getServletPath().contains("api/v1/auth") && !request.getServletPath().contains("/favicon.ico")) {
                 log.error("Token should start with Bearer");
             }
         }

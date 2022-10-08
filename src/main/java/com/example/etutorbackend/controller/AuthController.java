@@ -18,7 +18,6 @@ import static org.springframework.http.HttpStatus.OK;
 public class AuthController {
     private final AuthService authService;
 
-
     @PostMapping("/registration")
     public ResponseEntity<RegisterPayloadResponse> register(@RequestBody RegisterPayloadRequest registerPayloadRequest) {
         return ResponseEntity.status(CREATED)

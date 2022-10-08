@@ -13,25 +13,24 @@ import com.example.etutorbackend.repository.UserRepository;
 import com.example.etutorbackend.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.util.Collections;
 import java.util.HashSet;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ApplicationUserDetailsService implements UserDetailsService {
+    private final MailService mailService;
     private static final String USERNAME_NOT_FOUND_MESSAGE = "Not found user --> %s";
     private static final String BAD_CREDENTIALS_MESSAGE = "Bad credentials";
     private static final String USER_NOT_FOUND_MESSAGE = "Not found user with username --> %s";
@@ -116,6 +115,8 @@ public class ApplicationUserDetailsService implements UserDetailsService {
 
         userRepository.save(user);
         confirmationTokenRepository.save(confirmationToken);
+
+        mailService.sendConfirmationEmail(user, confirmationToken);
 
         return RegisterPayloadResponse.builder()
                 .confirmationToken(confirmationToken.getToken())
