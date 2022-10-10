@@ -5,7 +5,6 @@ import com.example.etutorbackend.model.entity.Subject;
 import com.example.etutorbackend.model.payload.subject.SubjectSearchPayload;
 import com.example.etutorbackend.repository.AdvertisementRepository;
 import com.example.etutorbackend.repository.SubjectRepository;
-import com.example.etutorbackend.util.MapUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +24,8 @@ public class SubjectService {
                 .collect(Collectors.toList());
     }
 
-    public Map<SubjectSearchPayload, Integer> findEntrySubjectsWithQuantities() {
-        Map<SubjectSearchPayload, Integer> subjectsWithQuantities  = new LinkedHashMap<>();
+    public Map<String, Integer> findEntrySubjectsWithQuantities() {
+        Map<String, Integer> subjectsWithQuantities  = new LinkedHashMap<>();
 
 
         List<Subject> subjects = subjectRepository.findAll()
@@ -36,11 +35,21 @@ public class SubjectService {
                 .toList();
 
         subjects.forEach((subject -> subjectsWithQuantities.put(
-                SubjectSearchPayloadMapper.mapToSubjectSearchPayloadMapper(subject),
+                SubjectSearchPayloadMapper.mapToSubjectSearchPayloadMapper(subject).getName(),
                 advertisementRepository.countAdvertisementBySubject(subject)
                 )));
 
-        MapUtil.sortByValue(subjectsWithQuantities);
+//        List<Map.Entry<String, Integer> > list
+//                = new ArrayList<>(
+//                subjectsWithQuantities.entrySet());
+//
+//        // Comparing two entries by value
+//        list.sort((entry1, entry2) -> {
+//
+//            // Subtracting the entries
+//            return entry2.getValue()
+//                    - entry1.getValue();
+//        });
 
         return subjectsWithQuantities;
     }

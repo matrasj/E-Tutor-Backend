@@ -25,8 +25,8 @@ public class SubjectController {
                 .body(subjectService.findAllSubjects());
     }
 
-    @GetMapping("/quantity-map")
-    public ResponseEntity<Map<SubjectSearchPayload, Integer>> getEntrySubjectsWithQuantities() {
+    @GetMapping("/quantity-entry-map")
+    public ResponseEntity<Map<String, Integer>> getEntrySubjectsWithQuantities() {
         return ResponseEntity.status(OK)
                 .body(subjectService.findEntrySubjectsWithQuantities());
     }
