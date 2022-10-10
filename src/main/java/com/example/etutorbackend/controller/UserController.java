@@ -1,14 +1,12 @@
 package com.example.etutorbackend.controller;
 
-import com.example.etutorbackend.model.payload.auth.login.UserAuthPayloadResponse;
+import com.example.etutorbackend.model.payload.user.UserPayload;
 import com.example.etutorbackend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -17,9 +15,17 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserController {
     private final UserService userService;
     @GetMapping("/{userId}")
-    public ResponseEntity<UserAuthPayloadResponse> getUser(@PathVariable Long userId) {
+    public ResponseEntity<UserPayload> getUser(@PathVariable Long userId) {
         return ResponseEntity.status(OK)
                 .body(userService.findUserById(userId));
     }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserPayload userPayload) {
+        return ResponseEntity.status(ACCEPTED)
+                .body(userService.updateUserById(userPayload, userId));
+    }
+
+
 
 }

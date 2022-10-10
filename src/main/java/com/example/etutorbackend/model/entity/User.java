@@ -40,6 +40,15 @@ public class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "city")
+    private String city;
+
     @Column(name = "enabled")
     private boolean enabled = false;
 
