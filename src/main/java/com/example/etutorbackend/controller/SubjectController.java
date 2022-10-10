@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -22,5 +23,11 @@ public class SubjectController {
     public ResponseEntity<List<SubjectSearchPayload>> getAllSubjects() {
         return ResponseEntity.status(OK)
                 .body(subjectService.findAllSubjects());
+    }
+
+    @GetMapping("/quantity-map")
+    public ResponseEntity<Map<SubjectSearchPayload, Integer>> getEntrySubjectsWithQuantities() {
+        return ResponseEntity.status(OK)
+                .body(subjectService.findEntrySubjectsWithQuantities());
     }
 }

@@ -39,6 +39,10 @@ public class Advertisement {
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
+    @ManyToOne
+    @JoinColumn(name = "subject_id", referencedColumnName = "id")
+    private Subject subject;
+
     @ManyToMany(cascade = {
             DETACH, MERGE, REFRESH, PERSIST
     })

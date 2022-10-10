@@ -1,7 +1,8 @@
 package com.example.etutorbackend.service.auth;
 
 import com.example.etutorbackend.exception.UserNotFoundException;
-import com.example.etutorbackend.mapper.UserAuthPayloadResponseMapper;
+
+import com.example.etutorbackend.mapper.UserPayloadMapper;
 import com.example.etutorbackend.model.entity.ConfirmationToken;
 import com.example.etutorbackend.model.entity.User;
 import com.example.etutorbackend.model.payload.auth.login.LoginPayloadRequest;
@@ -86,7 +87,7 @@ public class ApplicationUserDetailsService implements UserDetailsService {
 
         return LoginPayloadResponse.builder()
                 .jwtToken(generatedToken)
-                .userAuthPayloadResponse(UserAuthPayloadResponseMapper.mapToUserAuthPayloadResponse(user))
+                .userPayload(UserPayloadMapper.mapToUserPayload(user))
                 .build();
     }
 

@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -23,4 +27,7 @@ public class Subject {
 
     @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "subject", cascade = ALL)
+    private List<Advertisement> advertisements = new ArrayList<>();
 }

@@ -49,6 +49,9 @@ public class User {
     @Column(name = "city")
     private String city;
 
+    @Column(name = "profile_image_path")
+    private String profileImagePath;
+
     @Column(name = "enabled")
     private boolean enabled = false;
 

@@ -14,6 +14,7 @@ public class UserPayloadMapper {
                 .phoneNumber(user.getPhoneNumber())
                 .address(user.getAddress())
                 .city(user.getCity())
+                .profileImagePath(user.getProfileImagePath())
                 .build();
     }
 }

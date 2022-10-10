@@ -2,12 +2,14 @@ package com.example.etutorbackend.service;
 
 import com.example.etutorbackend.exception.LessonRangeNotFoundException;
 import com.example.etutorbackend.exception.PlaceNotFoundException;
+import com.example.etutorbackend.exception.SubjectNotFoundException;
 import com.example.etutorbackend.model.entity.*;
 import com.example.etutorbackend.model.payload.availibility.AvailabilityPayloadRequest;
 import com.example.etutorbackend.model.payload.advertisement.AdvertisementPayloadRequest;
 import com.example.etutorbackend.repository.AdvertisementRepository;
 import com.example.etutorbackend.repository.LessonRangeRepository;
 import com.example.etutorbackend.repository.PlaceRepository;
+import com.example.etutorbackend.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +25,11 @@ public class AdvertisementService {
     private static final String PLACE_NOT_FOUND_MESSAGE = "Not found place with name: %s";
     private static final String LESSON_RANGE_NOT_FOUND_MESSAGE = "Not found lesson range with name: %s";
     private static final String SUCCESSFULLY_ADVERTISEMENT_CREATION = "Successfully created advertisement";
+    private static final String SUBJECT_NOT_FOUND_MESSAGE = "Not found subject %s";
     private final AdvertisementRepository advertisementRepository;
     private final PlaceRepository placeRepository;
     private final LessonRangeRepository lessonRangeRepository;
+    private final SubjectRepository subjectRepository;
 
     @Transactional
     public String createAdvertisement(AdvertisementPayloadRequest advertisementPayloadRequest) {
@@ -41,14 +45,19 @@ public class AdvertisementService {
                         .orElseThrow(() -> new LessonRangeNotFoundException(String.format(LESSON_RANGE_NOT_FOUND_MESSAGE, lessonRangeName))))
                 .toList();
 
+        Subject subject = subjectRepository.findByName(advertisementPayloadRequest.getSubjectName())
+                .orElseThrow(() -> new SubjectNotFoundException(String.format(SUBJECT_NOT_FOUND_MESSAGE, advertisementPayloadRequest.getSubjectName())));
+
 
         List<Availability> availabilities = buildAvailabilitiesFromPayloadList(advertisementPayloadRequest.getAvailabilityPayloads());
 
         Advertisement advertisement = buildAdvertisementFromPayload(advertisementPayloadRequest,
+                subject,
                 places,
                 lessonRanges,
                 availabilities);
-        
+
+        subject.getAdvertisements().add(advertisement);
         places.forEach((place -> place.getAdvertisements().add(advertisement)));
         lessonRanges.forEach((lessonRange -> lessonRange.getAdvertisements().add(advertisement)));
         availabilities.forEach((availability -> availability.setAdvertisement(advertisement)));
@@ -59,6 +68,7 @@ public class AdvertisementService {
     }
 
     private Advertisement buildAdvertisementFromPayload(AdvertisementPayloadRequest advertisementPayloadRequest,
+                                                        Subject subject,
                                                         List<Place> places,
                                                         List<LessonRange> lessonRanges,
                                                         List<Availability> availabilities) {
@@ -68,6 +78,7 @@ public class AdvertisementService {
                 .minutesDuration(advertisementPayloadRequest.getMinutesDuration())
                 .shortDesc(advertisementPayloadRequest.getShortDescription())
                 .content(advertisementPayloadRequest.getContent())
+                .subject(subject)
                 .places(places)
                 .lessonRanges(lessonRanges)
                 .advertisementType(

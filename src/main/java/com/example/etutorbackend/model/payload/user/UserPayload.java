@@ -18,4 +18,5 @@ public class UserPayload {
     private String phoneNumber;
     private String address;
     private String city;
+    private String profileImagePath;
 }
