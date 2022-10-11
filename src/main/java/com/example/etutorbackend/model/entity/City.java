@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -30,5 +33,8 @@ public class City {
     })
     @JoinColumn(name = "state_id", referencedColumnName = "id")
     private State state;
+
+    @OneToMany(mappedBy = "city", cascade = ALL)
+    private List<Advertisement> advertisements = new ArrayList<>();
 
 }

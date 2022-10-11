@@ -51,6 +51,12 @@ public class Advertisement {
     inverseJoinColumns = @JoinColumn(name = "place_id", referencedColumnName = "id"))
     private List<Place> places = new ArrayList<>();
 
+    @ManyToOne(cascade = {
+            DETACH, MERGE, PERSIST, REFRESH
+    })
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    private City city;
+
     @ManyToMany(cascade = {
             DETACH, MERGE, REFRESH, PERSIST
     })
