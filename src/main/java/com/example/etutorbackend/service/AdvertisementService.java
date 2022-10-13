@@ -28,6 +28,7 @@ public class AdvertisementService {
     private static final String SUBJECT_NOT_FOUND_MESSAGE = "Not found subject %s";
     private static final String CITY_NOT_FOUND_MESSAGE = "Not found city %s";
     private static final String USER_NOT_FOUND_MESSAGE = "Not found user with id %d";
+    private static final String ADVERTISEMENT_NOT_FOUND_MESSAGE = "Not found advertisement with id %d";
     private final AdvertisementRepository advertisementRepository;
     private final PlaceRepository placeRepository;
     private final CityRepository cityRepository;
@@ -116,7 +117,7 @@ public class AdvertisementService {
                 .toList();
     }
 
-    public Page<AdvertisementPayloadResponse> findAdvertisementsByKeyphraseWithPagination(String keyPhrase, int pageNumber, int pageSize) {
+    public Page<AdvertisementPayloadResponse> findAdvertisementsByKeyphrase(String keyPhrase, int pageNumber, int pageSize) {
         Page<Advertisement> advertisementsByKeyphrase
                 = advertisementRepository.findAllByShortDescContaining(keyPhrase, PageRequest.of(pageNumber, pageSize));
 
@@ -128,4 +129,63 @@ public class AdvertisementService {
                 PageRequest.of(pageNumber, pageSize),
                 advertisementsByKeyphrase.getTotalElements());
     }
+
+    public Page<AdvertisementPayloadResponse> findAdvertisementsByKeyphraseAndType(String keyPhrase, String type, int pageNumber, int pageSize) {
+        AdvertisementType advertisementType = null;
+        switch (type) {
+            case "student" -> advertisementType = LOOKING_FOR_TUTOR;
+            case "tutor" -> advertisementType = LOOKING_FOR_STUDENT;
+        }
+
+        System.out.println(advertisementType.name());
+
+        Page<Advertisement> advertisementsByKeyphraseAndType = advertisementRepository
+                .findAllByShortDescContainingAndAdvertisementType(
+                        keyPhrase,
+                        advertisementType,
+                        PageRequest.of(pageNumber, pageSize));
+
+        return new PageImpl<>(
+                advertisementsByKeyphraseAndType
+                        .stream()
+                        .map(AdvertisementPayloadResponseMapper::mapToAdvertisementPayloadResponse)
+                        .toList(),
+                PageRequest.of(pageNumber, pageSize),
+                advertisementsByKeyphraseAndType.getTotalElements());
+
+    }
+
+    public Page<AdvertisementPayloadResponse> findAdvertisementsBySubjectName(int pageNumber, int pageSize, String subjectName) {
+        Page<Advertisement> advertisementsBySubjectName
+                = advertisementRepository.findAllBySubjectName(subjectName, PageRequest.of(pageNumber, pageSize));
+
+        return new PageImpl<>(
+                advertisementsBySubjectName
+                        .stream()
+                        .map(AdvertisementPayloadResponseMapper::mapToAdvertisementPayloadResponse)
+                        .toList(),
+                PageRequest.of(pageNumber, pageSize),
+                advertisementsBySubjectName.getTotalElements());
+    }
+
+    public Page<AdvertisementPayloadResponse> findAdvertisementsByCityName(int pageNumber, int pageSize, String cityName) {
+        Page<Advertisement> advertisementsBySubjectName
+                = advertisementRepository.findAllByCityName(cityName, PageRequest.of(pageNumber, pageSize));
+
+        return new PageImpl<>(
+                advertisementsBySubjectName
+                        .stream()
+                        .map(AdvertisementPayloadResponseMapper::mapToAdvertisementPayloadResponse)
+                        .toList(),
+                PageRequest.of(pageNumber, pageSize),
+                advertisementsBySubjectName.getTotalElements());
+    }
+
+    public AdvertisementPayloadResponse findAdvertisementById(Long advertisementId) {
+        Advertisement advertisement = advertisementRepository.findById(advertisementId)
+                .orElseThrow(() -> new AdvertisementNotFoundException(String.format(ADVERTISEMENT_NOT_FOUND_MESSAGE, advertisementId)));
+
+        return AdvertisementPayloadResponseMapper.mapToAdvertisementPayloadResponse(advertisement);
+    }
+
 }
