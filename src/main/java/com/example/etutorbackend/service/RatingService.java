@@ -21,7 +21,8 @@ public class RatingService {
                         .mapToInt(review -> review.getRatingValue().getRatingValue())
                         .sum();
 
-        return BigDecimal.valueOf(ratingSum / reviewsQuantity);
+        double average = (double)ratingSum / reviewsQuantity;
+        return BigDecimal.valueOf(average  * 10L);
 
     }
 }
