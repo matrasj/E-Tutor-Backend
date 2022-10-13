@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AvailabilityPayloadRequest {
+public class AvailabilityPayload {
     private String dayName;
     private String startHour;
     private String endHour;

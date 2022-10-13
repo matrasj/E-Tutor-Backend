@@ -1,16 +1,16 @@
 package com.example.etutorbackend.service;
 
-import com.example.etutorbackend.exception.LessonRangeNotFoundException;
-import com.example.etutorbackend.exception.PlaceNotFoundException;
-import com.example.etutorbackend.exception.SubjectNotFoundException;
+import com.example.etutorbackend.exception.*;
+import com.example.etutorbackend.mapper.AdvertisementPayloadResponseMapper;
 import com.example.etutorbackend.model.entity.*;
-import com.example.etutorbackend.model.payload.availibility.AvailabilityPayloadRequest;
+import com.example.etutorbackend.model.payload.advertisement.AdvertisementPayloadResponse;
+import com.example.etutorbackend.model.payload.availibility.AvailabilityPayload;
 import com.example.etutorbackend.model.payload.advertisement.AdvertisementPayloadRequest;
-import com.example.etutorbackend.repository.AdvertisementRepository;
-import com.example.etutorbackend.repository.LessonRangeRepository;
-import com.example.etutorbackend.repository.PlaceRepository;
-import com.example.etutorbackend.repository.SubjectRepository;
+import com.example.etutorbackend.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,13 +26,20 @@ public class AdvertisementService {
     private static final String LESSON_RANGE_NOT_FOUND_MESSAGE = "Not found lesson range with name: %s";
     private static final String SUCCESSFULLY_ADVERTISEMENT_CREATION = "Successfully created advertisement";
     private static final String SUBJECT_NOT_FOUND_MESSAGE = "Not found subject %s";
+    private static final String CITY_NOT_FOUND_MESSAGE = "Not found city %s";
+    private static final String USER_NOT_FOUND_MESSAGE = "Not found user with id %d";
     private final AdvertisementRepository advertisementRepository;
     private final PlaceRepository placeRepository;
+    private final CityRepository cityRepository;
     private final LessonRangeRepository lessonRangeRepository;
     private final SubjectRepository subjectRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public String createAdvertisement(AdvertisementPayloadRequest advertisementPayloadRequest) {
+        User user = userRepository.findById(advertisementPayloadRequest.getAuthorId())
+                .orElseThrow(() -> new UserNotFoundException(String.format(USER_NOT_FOUND_MESSAGE, advertisementPayloadRequest.getAuthorId())));
+
         List<Place> places = advertisementPayloadRequest.getPlacesNames()
                 .stream()
                 .map((placeName) -> placeRepository.findByName(placeName)
@@ -48,20 +55,26 @@ public class AdvertisementService {
         Subject subject = subjectRepository.findByName(advertisementPayloadRequest.getSubjectName())
                 .orElseThrow(() -> new SubjectNotFoundException(String.format(SUBJECT_NOT_FOUND_MESSAGE, advertisementPayloadRequest.getSubjectName())));
 
+        City city = cityRepository.findByName(advertisementPayloadRequest.getCityName())
+                .orElseThrow(() -> new CityNotFoundException(String.format(CITY_NOT_FOUND_MESSAGE, advertisementPayloadRequest.getCityName())));
 
         List<Availability> availabilities = buildAvailabilitiesFromPayloadList(advertisementPayloadRequest.getAvailabilityPayloads());
 
         Advertisement advertisement = buildAdvertisementFromPayload(advertisementPayloadRequest,
                 subject,
                 places,
+                city,
                 lessonRanges,
-                availabilities);
+                availabilities,
+                user);
 
         subject.getAdvertisements().add(advertisement);
         places.forEach((place -> place.getAdvertisements().add(advertisement)));
+        city.getAdvertisements().add(advertisement);
         lessonRanges.forEach((lessonRange -> lessonRange.getAdvertisements().add(advertisement)));
         availabilities.forEach((availability -> availability.setAdvertisement(advertisement)));
-        
+        user.getAdvertisements().add(advertisement);
+
         advertisementRepository.save(advertisement);
         
         return SUCCESSFULLY_ADVERTISEMENT_CREATION;
@@ -70,9 +83,10 @@ public class AdvertisementService {
     private Advertisement buildAdvertisementFromPayload(AdvertisementPayloadRequest advertisementPayloadRequest,
                                                         Subject subject,
                                                         List<Place> places,
+                                                        City city,
                                                         List<LessonRange> lessonRanges,
-                                                        List<Availability> availabilities) {
-        System.out.println(advertisementPayloadRequest.getAdvertisementType().name());
+                                                        List<Availability> availabilities,
+                                                        User user) {
         return Advertisement.builder()
                 .price(advertisementPayloadRequest.getPrice())
                 .minutesDuration(advertisementPayloadRequest.getMinutesDuration())
@@ -80,16 +94,18 @@ public class AdvertisementService {
                 .content(advertisementPayloadRequest.getContent())
                 .subject(subject)
                 .places(places)
+                .city(city)
                 .lessonRanges(lessonRanges)
                 .advertisementType(
                         advertisementPayloadRequest.getAdvertisementType().name().equals("LOOKING_FOR_TUTOR") ?
                                 LOOKING_FOR_TUTOR : LOOKING_FOR_STUDENT
                 )
                 .availabilities(availabilities)
+                .user(user)
                 .build();
     }
 
-    private List<Availability> buildAvailabilitiesFromPayloadList(List<AvailabilityPayloadRequest> availabilityPayloadRequests) {
+    private List<Availability> buildAvailabilitiesFromPayloadList(List<AvailabilityPayload> availabilityPayloadRequests) {
         return availabilityPayloadRequests
                 .stream()
                 .map((availabilityPayloadRequest -> Availability.builder()
@@ -98,5 +114,18 @@ public class AdvertisementService {
                         .day(availabilityPayloadRequest.getDayName())
                         .build()))
                 .toList();
+    }
+
+    public Page<AdvertisementPayloadResponse> findAdvertisementsByKeyphraseWithPagination(String keyPhrase, int pageNumber, int pageSize) {
+        Page<Advertisement> advertisementsByKeyphrase
+                = advertisementRepository.findAllByShortDescContaining(keyPhrase, PageRequest.of(pageNumber, pageSize));
+
+        return new PageImpl<>(
+                advertisementsByKeyphrase
+                        .stream()
+                        .map(AdvertisementPayloadResponseMapper::mapToAdvertisementPayloadResponse)
+                        .toList(),
+                PageRequest.of(pageNumber, pageSize),
+                advertisementsByKeyphrase.getTotalElements());
     }
 }

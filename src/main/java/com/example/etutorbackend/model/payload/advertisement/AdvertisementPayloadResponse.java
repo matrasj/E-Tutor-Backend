@@ -2,6 +2,7 @@ package com.example.etutorbackend.model.payload.advertisement;
 
 import com.example.etutorbackend.model.entity.AdvertisementType;
 import com.example.etutorbackend.model.payload.availibility.AvailabilityPayload;
+import com.example.etutorbackend.model.payload.user.UserPayload;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,8 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AdvertisementPayloadRequest {
-    private Long authorId;
+public class AdvertisementPayloadResponse {
+    private Long id;
+    private UserPayload userPayload;
     private String subjectName;
     private BigDecimal price;
     private int minutesDuration;
@@ -27,6 +29,6 @@ public class AdvertisementPayloadRequest {
     private List<AvailabilityPayload> availabilityPayloads = new ArrayList<>();
     private List<String> lessonRanges = new ArrayList<>();
     private AdvertisementType advertisementType;
-    private String authorImageLink;
-
+    public int reviewsQuantity;
+    public BigDecimal ratingAverage;
 }

@@ -1,17 +1,15 @@
 package com.example.etutorbackend.controller;
 
 import com.example.etutorbackend.model.payload.advertisement.AdvertisementPayloadRequest;
+import com.example.etutorbackend.model.payload.advertisement.AdvertisementPayloadResponse;
 import com.example.etutorbackend.service.AdvertisementService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Request;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api/v1/advertisements")
@@ -19,8 +17,17 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class AdvertisementController {
     private final AdvertisementService advertisementService;
     @PostMapping
-    public ResponseEntity<String> createAdvertisement(@RequestBody AdvertisementPayloadRequest advertisementPayloadRequest) {
+    public ResponseEntity<String> createAdvertisement(@RequestBody AdvertisementPayloadRequest advertisementPayload) {
         return ResponseEntity.status(CREATED)
-                .body(advertisementService.createAdvertisement(advertisementPayloadRequest));
+                .body(advertisementService.createAdvertisement(advertisementPayload));
+    }
+
+    @GetMapping("/pagination/findByShortTitleKeyphraseContaining")
+    public ResponseEntity<Page<AdvertisementPayloadResponse>> getAdvertisementsByKeyphraseWithPagination(@RequestParam String keyPhrase,
+                                                                                                         @RequestParam int pageNumber,
+                                                                                                         @RequestParam int pageSize
+                                                                                                        ) {
+        return ResponseEntity.status(OK)
+                .body(advertisementService.findAdvertisementsByKeyphraseWithPagination(keyPhrase, pageNumber, pageSize));
     }
 }

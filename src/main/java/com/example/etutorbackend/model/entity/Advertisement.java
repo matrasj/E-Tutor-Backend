@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
 
@@ -43,6 +44,12 @@ public class Advertisement {
     @JoinColumn(name = "subject_id", referencedColumnName = "id")
     private Subject subject;
 
+    @ManyToOne(cascade = {
+            DETACH, MERGE, PERSIST, REFRESH
+    })
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
     @ManyToMany(cascade = {
             DETACH, MERGE, REFRESH, PERSIST
     })
@@ -60,7 +67,7 @@ public class Advertisement {
     @ManyToMany(cascade = {
             DETACH, MERGE, REFRESH, PERSIST
     })
-    @JoinTable(name = "advertisement_ranges",
+    @JoinTable(name = "advertisement_range",
             joinColumns = @JoinColumn(name = "advertisement_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "range_id", referencedColumnName = "id"))
     private List<LessonRange> lessonRanges = new ArrayList<>();
@@ -72,5 +79,6 @@ public class Advertisement {
     @OneToMany(cascade = ALL, mappedBy = "advertisement")
     private List<Availability> availabilities = new ArrayList<>();
 
-
+    @OneToMany(cascade = ALL, mappedBy = "advertisement")
+    private List<Review> reviews = new ArrayList<>();
 }

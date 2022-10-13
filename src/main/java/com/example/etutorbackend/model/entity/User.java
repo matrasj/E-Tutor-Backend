@@ -6,9 +6,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -65,4 +63,10 @@ public class User {
 
     @OneToMany(cascade = ALL, mappedBy = "user")
     private Set<ConfirmationToken> confirmationTokens = new HashSet<>();
+
+    @OneToMany(cascade = ALL, mappedBy = "user")
+    private List<Advertisement> advertisements = new ArrayList<>();
+
+    @OneToMany(cascade = ALL, mappedBy = "user")
+    private List<Review> reviews = new ArrayList<>();
 }

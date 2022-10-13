@@ -2,6 +2,7 @@ package com.example.etutorbackend.service;
 
 import com.example.etutorbackend.mapper.SubjectSearchPayloadMapper;
 import com.example.etutorbackend.model.entity.Subject;
+import com.example.etutorbackend.model.payload.city.CityQuantityPayload;
 import com.example.etutorbackend.model.payload.subject.SubjectQuantityPayload;
 import com.example.etutorbackend.model.payload.subject.SubjectSearchPayload;
 import com.example.etutorbackend.repository.AdvertisementRepository;
@@ -28,21 +29,19 @@ public class SubjectService {
         List<SubjectQuantityPayload> subjectsWithQuantities = new ArrayList<>();
 
 
-        List<Subject> subjects = subjectRepository.findAll()
-                .stream()
-                .sorted(((o1, o2) -> o2.getAdvertisements().size() - o1.getAdvertisements().size()))
-                .limit(recordsQuantity)
-                .toList();
+        List<String> subjectsWithQuantitiesSorted
+                = subjectRepository.findSubjectsOrderByAddsQuantityWithLimit(recordsQuantity);
 
-        subjects.forEach((subject -> {
-            subjectsWithQuantities.add(
-                    SubjectQuantityPayload.builder()
-                            .subjectName(subject.getName())
-                            .addsQuantity(subject.getAdvertisements().size())
-                            .build()
-            );
-        }));
-
+        subjectsWithQuantitiesSorted
+                .forEach(subjectWithQuantity -> {
+                    String[] cityAndQuantity = subjectWithQuantity.split(",");
+                    subjectsWithQuantities.add(
+                            new SubjectQuantityPayload(
+                                    cityAndQuantity[0],
+                                    Integer.parseInt(cityAndQuantity[1])
+                            )
+                    );
+                });
 
         return subjectsWithQuantities;
     }

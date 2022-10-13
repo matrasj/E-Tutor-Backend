@@ -1,5 +1,6 @@
 package com.example.etutorbackend.controller;
 
+import com.example.etutorbackend.model.payload.city.CityPayload;
 import com.example.etutorbackend.model.payload.city.CityQuantityPayload;
 import com.example.etutorbackend.service.CityService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,12 @@ public class CityController {
     public ResponseEntity<List<CityQuantityPayload>> getCitiesWithQuantities(@RequestParam int recordsQuantity) {
         return ResponseEntity.status(OK)
                 .body(cityService.findCitiesWithQuantities(recordsQuantity));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CityPayload>> getAllCities() {
+        return ResponseEntity.status(OK)
+                .body(cityService.findAllCities());
     }
 
 }

@@ -1,6 +1,8 @@
 package com.example.etutorbackend.service;
 
+import com.example.etutorbackend.mapper.CityPayloadMapper;
 import com.example.etutorbackend.model.entity.City;
+import com.example.etutorbackend.model.payload.city.CityPayload;
 import com.example.etutorbackend.model.payload.city.CityQuantityPayload;
 import com.example.etutorbackend.repository.CityRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,19 +20,26 @@ public class CityService {
     public List<CityQuantityPayload> findCitiesWithQuantities(int recordsQuantity) {
         List<CityQuantityPayload> cityQuantityPayloads = new ArrayList<>();
 
-        List<City> cities = cityRepository.findAll()
-                .stream()
-                .sorted(((o1, o2) -> o2.getAdvertisements().size() - o1.getAdvertisements().size()))
-                .limit(recordsQuantity)
-                .toList();
+        List<String> citiesWithQuantitiesSorted = cityRepository.findCitiesOrderByAddsQuantityWithLimit(recordsQuantity);
 
-        cities.forEach((city -> cityQuantityPayloads.add(
-                CityQuantityPayload.builder()
-                        .cityName(city.getName())
-                        .addsQuantity(city.getAdvertisements().size())
-                        .build()
-        )));
+        citiesWithQuantitiesSorted
+                .forEach(cityWithQuantity -> {
+                    String[] cityAndQuantity = cityWithQuantity.split(",");
+                    cityQuantityPayloads.add(
+                            new CityQuantityPayload(
+                                    cityAndQuantity[0],
+                                    Integer.parseInt(cityAndQuantity[1])
+                            )
+                    );
+                });
 
         return cityQuantityPayloads;
+    }
+
+    public List<CityPayload> findAllCities() {
+        return cityRepository.findAll()
+                .stream()
+                .map(CityPayloadMapper::mapToCityPayload)
+                .toList();
     }
 }
