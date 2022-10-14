@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -22,7 +21,7 @@ public class RatingService {
                         .sum();
 
         double average = (double)ratingSum / reviewsQuantity;
-        return BigDecimal.valueOf(average  * 10L);
+        return BigDecimal.valueOf((average / 5) * 100);
 
     }
 }

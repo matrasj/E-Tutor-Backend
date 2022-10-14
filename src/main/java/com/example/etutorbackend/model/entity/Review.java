@@ -10,7 +10,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 
 import java.util.Date;
-import java.util.zip.CheckedOutputStream;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.EnumType.STRING;
@@ -28,7 +27,7 @@ public class Review {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "rating_value")

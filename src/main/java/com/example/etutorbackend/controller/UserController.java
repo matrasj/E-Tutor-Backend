@@ -41,13 +41,4 @@ public class UserController {
         return ResponseEntity.status(ACCEPTED)
                 .body(userService.updateUserById(userPayload, userId));
     }
-
-//    @GetMapping("/{userId}/completion-percent")
-//    public ResponseEntity<> getCompletionPercent(@PathVariable Long userId) {
-//        return ResponseEntity.status(OK)
-//                .body(userService.getCompletionPercentByUserI)
-//    }
-
-
-
 }
