@@ -68,7 +68,8 @@ public class Advertisement {
     })
     @JoinTable(name = "advertisement_range",
             joinColumns = @JoinColumn(name = "advertisement_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "range_id", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "range_id", referencedColumnName = "id")
+    )
     private List<LessonRange> lessonRanges = new ArrayList<>();
 
     @Column(name = "advertisement_type")
@@ -80,4 +81,7 @@ public class Advertisement {
 
     @OneToMany(cascade = ALL, mappedBy = "advertisement")
     private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(cascade = ALL, mappedBy = "advertisement")
+    private List<Message> messages = new ArrayList<>();
 }

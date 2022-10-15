@@ -5,14 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-
 import java.util.Date;
 
 import static javax.persistence.CascadeType.*;
-import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -20,39 +17,41 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "review")
-public class Review {
+@Table(name = "message")
+public class Message {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "subject")
+    private String subject;
+
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "rating_value")
-    @Enumerated(value = STRING)
-    private RatingValue ratingValue;
+    @Column(name = "seen")
+    private boolean seen = false;
 
-    @CreationTimestamp
     @Column(name = "created_at")
+    @CreationTimestamp
     private Date createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "last_updated")
-    private Date lastUpdate;
-
     @ManyToOne(cascade = {
-            DETACH, MERGE, REFRESH, PERSIST
+            DETACH, MERGE, PERSIST, REFRESH
     })
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @JoinColumn(name = "sender_id", referencedColumnName = "id")
+    private User sender;
 
     @ManyToOne(cascade = {
-            DETACH, MERGE, REFRESH, PERSIST
+            DETACH, MERGE, PERSIST, REFRESH
+    })
+    @JoinColumn(name = "receiver_id", referencedColumnName = "id")
+    private User receiver;
+
+    @ManyToOne(cascade = {
+            DETACH, MERGE, PERSIST, REFRESH
     })
     @JoinColumn(name = "advertisement_id", referencedColumnName = "id")
     private Advertisement advertisement;
-
-
 }

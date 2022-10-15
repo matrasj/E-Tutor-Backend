@@ -41,7 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch (IllegalArgumentException illegalArgumentException) {
                 log.error("Invalid JWT token");
             } catch (ExpiredJwtException expiredJwtException) {
-                if (!request.getServletPath().contains("api/v1/auth")) {
+                if (!request.getServletPath().contains("api/v1/auth")
+               ) {
                     log.error("Token has been already expired");
                 }
             } catch (Exception exception) {

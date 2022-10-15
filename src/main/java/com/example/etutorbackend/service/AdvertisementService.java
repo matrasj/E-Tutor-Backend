@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.etutorbackend.model.entity.AdvertisementType.LOOKING_FOR_STUDENT;
 import static com.example.etutorbackend.model.entity.AdvertisementType.LOOKING_FOR_TUTOR;
@@ -119,7 +120,7 @@ public class AdvertisementService {
 
     public Page<AdvertisementPayloadResponse> findAdvertisementsByKeyphrase(String keyPhrase, int pageNumber, int pageSize) {
         Page<Advertisement> advertisementsByKeyphrase
-                = advertisementRepository.findAllByShortDescContaining(keyPhrase, PageRequest.of(pageNumber, pageSize));
+                = advertisementRepository.findAllByShortDescOrSubjectContaining(keyPhrase, keyPhrase, PageRequest.of(pageNumber, pageSize));
 
         return new PageImpl<>(
                 advertisementsByKeyphrase
@@ -137,10 +138,8 @@ public class AdvertisementService {
             case "tutor" -> advertisementType = LOOKING_FOR_STUDENT;
         }
 
-        System.out.println(advertisementType.name());
-
         Page<Advertisement> advertisementsByKeyphraseAndType = advertisementRepository
-                .findAllByShortDescContainingAndAdvertisementType(
+                .findByShortDescContainingOrAdvertisementType(
                         keyPhrase,
                         advertisementType,
                         PageRequest.of(pageNumber, pageSize));
@@ -188,4 +187,10 @@ public class AdvertisementService {
         return AdvertisementPayloadResponseMapper.mapToAdvertisementPayloadResponse(advertisement);
     }
 
+    public List<AdvertisementPayloadResponse> findAdvertisementsByUserId(Long userId) {
+        return advertisementRepository.findByUserId(userId)
+                .stream()
+                .map(AdvertisementPayloadResponseMapper::mapToAdvertisementPayloadResponse)
+                .collect(Collectors.toList());
+    }
 }
