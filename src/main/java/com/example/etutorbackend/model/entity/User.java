@@ -69,4 +69,12 @@ public class User {
 
     @OneToMany(cascade = ALL, mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiver")
+    private List<Message> messagesReceived = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender")
+    private List<Message> messagesSent = new ArrayList<>();
+
+
 }
