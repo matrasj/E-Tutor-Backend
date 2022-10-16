@@ -7,7 +7,6 @@ public class MessagePayloadResponseMapper {
     public static MessagePayloadResponse mapToMessagePayloadResponse(Message message) {
         return MessagePayloadResponse.builder()
                 .id(message.getId())
-                .advertisementId(message.getAdvertisement().getId())
                 .sender(UserPayloadMapper.mapToUserPayload(message.getSender()))
                 .receiver(UserPayloadMapper.mapToUserPayload(message.getReceiver()))
                 .subject(message.getSubject())

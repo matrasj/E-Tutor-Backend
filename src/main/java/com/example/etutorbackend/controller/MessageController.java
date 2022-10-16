@@ -17,24 +17,6 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class MessageController {
     private final MessageService messageService;
-
-    @GetMapping("/pagination/sent/findByUserId/{userId}")
-    public ResponseEntity<Page<MessagePayloadResponse>> getMessagesSentForUser(@PathVariable Long userId,
-                                                                               @RequestParam int pageSize,
-                                                                               @RequestParam int pageNumber) {
-        return ResponseEntity.status(OK)
-                .body(messageService.findSentMessagesByUserIdWithPagination(userId, pageSize, pageNumber));
-    }
-
-    @GetMapping("/pagination/received/findByUserId/{userId}")
-    public ResponseEntity<Page<MessagePayloadResponse>> getMessagesReceivedByUser(@PathVariable Long userId,
-                                                                               @RequestParam int pageSize,
-                                                                               @RequestParam int pageNumber) {
-        return ResponseEntity.status(OK)
-                .body(messageService.findReceivedMessagesByUserIdWithPagination(userId, pageSize, pageNumber));
-    }
-
-
     @PostMapping
     public ResponseEntity<String> createMessage(@RequestBody MessagePayloadRequest messagePayloadRequest) {
         return ResponseEntity.status(CREATED)

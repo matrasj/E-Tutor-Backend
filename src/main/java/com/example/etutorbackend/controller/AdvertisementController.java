@@ -79,4 +79,7 @@ public class AdvertisementController {
         return ResponseEntity.status(OK)
                 .body(advertisementService.findAdvertisementsByUserId(userId));
     }
+
+
 }
+

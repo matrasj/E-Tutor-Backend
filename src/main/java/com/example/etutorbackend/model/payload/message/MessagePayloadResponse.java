@@ -14,7 +14,6 @@ import java.util.Date;
 @Builder
 public class MessagePayloadResponse {
     private Long id;
-    private Long advertisementId;
     private UserPayload sender;
     private UserPayload receiver;
     private String subject;
