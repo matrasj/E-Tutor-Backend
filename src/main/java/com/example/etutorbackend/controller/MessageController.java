@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -21,5 +23,12 @@ public class MessageController {
     public ResponseEntity<String> createMessage(@RequestBody MessagePayloadRequest messagePayloadRequest) {
         return ResponseEntity.status(CREATED)
                 .body(messageService.createMessage(messagePayloadRequest));
+    }
+
+    @GetMapping("/conversation")
+    public ResponseEntity<List<MessagePayloadResponse>> getMessagesForConversation(@RequestParam Long firstUserId,
+                                                                                   @RequestParam Long secondUserId) {
+        return ResponseEntity.status(OK)
+                .body(messageService.findAllMessagesForConversationByIds(firstUserId, secondUserId));
     }
 }

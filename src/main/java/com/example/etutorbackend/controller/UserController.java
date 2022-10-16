@@ -3,6 +3,7 @@ package com.example.etutorbackend.controller;
 import com.example.etutorbackend.model.payload.user.UserPayload;
 import com.example.etutorbackend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,5 +41,11 @@ public class UserController {
     public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserPayload userPayload) {
         return ResponseEntity.status(ACCEPTED)
                 .body(userService.updateUserById(userPayload, userId));
+    }
+
+    @GetMapping("/conversations-list/{userId}")
+    public ResponseEntity<Page<UserPayload>> getUsersForConversationsByUserId(@PathVariable Long userId, int pageNumber, int pageSize) {
+        return ResponseEntity.status(OK)
+                .body(userService.findUsersForConversationsByUserId(userId, pageNumber, pageSize));
     }
 }
