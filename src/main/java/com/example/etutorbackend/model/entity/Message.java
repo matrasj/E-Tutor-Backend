@@ -48,10 +48,4 @@ public class Message {
     })
     @JoinColumn(name = "receiver_id", referencedColumnName = "id")
     private User receiver;
-
-    @ManyToOne(cascade = {
-            DETACH, MERGE, PERSIST, REFRESH
-    })
-    @JoinColumn(name = "advertisement_id", referencedColumnName = "id")
-    private Advertisement advertisement;
 }

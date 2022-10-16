@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,19 +32,7 @@ public class MessageService {
     private final UserRepository userRepository;
     private final AdvertisementRepository advertisementRepository;
 
-    public Page<MessagePayloadResponse> findSentMessagesByUserIdWithPagination(Long userId, int pageSize, int pageNumber) {
-        Page<Message> sentMessages
-                = messageRepository.findBySenderIdOrderByCreatedAtDesc(userId, PageRequest.of(pageNumber, pageSize));
 
-        return new PageImpl<>(
-                sentMessages
-                        .stream()
-                        .map(MessagePayloadResponseMapper::mapToMessagePayloadResponse)
-                        .collect(Collectors.toList()),
-                PageRequest.of(pageNumber, pageSize),
-                sentMessages.getTotalElements()
-        );
-    }
 
     @Transactional
     public String createMessage(MessagePayloadRequest messagePayloadRequest) {
@@ -51,43 +40,34 @@ public class MessageService {
                 .orElseThrow(() -> new UserNotFoundException(String.format(AUTHOR_NOT_FOUND_MESSAGE, messagePayloadRequest.getSenderId())));
 
         User receiver = userRepository.findById(messagePayloadRequest.getReceiverId())
-                .orElseThrow(() -> new UserNotFoundException(String.format(RECIPIENT_NOT_FOUND_MESSAGE, messagePayloadRequest.getAdvertisementId())));
-
-        Advertisement advertisement = advertisementRepository.findById(messagePayloadRequest.getAdvertisementId())
-                .orElseThrow(() -> new AdvertisementNotFoundException(String.format(ADVERTISEMENT_NOT_FOUND_MESSAGE, messagePayloadRequest.getAdvertisementId())));
+                .orElseThrow(() -> new UserNotFoundException(String.format(RECIPIENT_NOT_FOUND_MESSAGE, messagePayloadRequest.getReceiverId())));
 
         Message message = Message.builder()
                 .subject(messagePayloadRequest.getSubject())
                 .content(messagePayloadRequest.getContent())
                 .sender(sender)
                 .receiver(receiver)
-                .advertisement(advertisement)
                 .build();
 
         messageRepository.save(message);
 
         sender.getMessagesSent().add(message);
         receiver.getMessagesReceived().add(message);
-        advertisement.getMessages().add(message);
 
         userRepository.save(sender);
         userRepository.save(receiver);
-        advertisementRepository.save(advertisement);
 
         return SUCCESSFULLY_MESSAGE_CREATION;
     }
 
-    public Page<MessagePayloadResponse> findReceivedMessagesByUserIdWithPagination(Long userId, int pageSize, int pageNumber) {
-        Page<Message> sentMessages
-                = messageRepository.findByReceiverIdOrderByCreatedAt(userId, PageRequest.of(pageNumber, pageSize));
 
-        return new PageImpl<>(
-                sentMessages
-                        .stream()
-                        .map(MessagePayloadResponseMapper::mapToMessagePayloadResponse)
-                        .collect(Collectors.toList()),
-                PageRequest.of(pageNumber, pageSize),
-                sentMessages.getTotalElements()
-        );
+    public List<MessagePayloadResponse> findAllMessagesForConversationByIds(Long firstUserId, Long secondUserId) {
+        List<Message> messagesForConversation
+                = messageRepository.findMessagesForConversation(firstUserId, secondUserId);
+
+        return messagesForConversation
+                .stream()
+                .map(MessagePayloadResponseMapper::mapToMessagePayloadResponse)
+                .collect(Collectors.toList());
     }
 }

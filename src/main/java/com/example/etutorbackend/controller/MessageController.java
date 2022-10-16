@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -17,27 +19,16 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class MessageController {
     private final MessageService messageService;
-
-    @GetMapping("/pagination/sent/findByUserId/{userId}")
-    public ResponseEntity<Page<MessagePayloadResponse>> getMessagesSentForUser(@PathVariable Long userId,
-                                                                               @RequestParam int pageSize,
-                                                                               @RequestParam int pageNumber) {
-        return ResponseEntity.status(OK)
-                .body(messageService.findSentMessagesByUserIdWithPagination(userId, pageSize, pageNumber));
-    }
-
-    @GetMapping("/pagination/received/findByUserId/{userId}")
-    public ResponseEntity<Page<MessagePayloadResponse>> getMessagesReceivedByUser(@PathVariable Long userId,
-                                                                               @RequestParam int pageSize,
-                                                                               @RequestParam int pageNumber) {
-        return ResponseEntity.status(OK)
-                .body(messageService.findReceivedMessagesByUserIdWithPagination(userId, pageSize, pageNumber));
-    }
-
-
     @PostMapping
     public ResponseEntity<String> createMessage(@RequestBody MessagePayloadRequest messagePayloadRequest) {
         return ResponseEntity.status(CREATED)
                 .body(messageService.createMessage(messagePayloadRequest));
+    }
+
+    @GetMapping("/conversation")
+    public ResponseEntity<List<MessagePayloadResponse>> getMessagesForConversation(@RequestParam Long firstUserId,
+                                                                                   @RequestParam Long secondUserId) {
+        return ResponseEntity.status(OK)
+                .body(messageService.findAllMessagesForConversationByIds(firstUserId, secondUserId));
     }
 }

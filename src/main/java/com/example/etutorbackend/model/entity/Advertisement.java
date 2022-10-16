@@ -82,6 +82,5 @@ public class Advertisement {
     @OneToMany(cascade = ALL, mappedBy = "advertisement")
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(cascade = ALL, mappedBy = "advertisement")
-    private List<Message> messages = new ArrayList<>();
+
 }

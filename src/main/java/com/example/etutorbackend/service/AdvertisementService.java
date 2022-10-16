@@ -193,4 +193,6 @@ public class AdvertisementService {
                 .map(AdvertisementPayloadResponseMapper::mapToAdvertisementPayloadResponse)
                 .collect(Collectors.toList());
     }
+
+
 }

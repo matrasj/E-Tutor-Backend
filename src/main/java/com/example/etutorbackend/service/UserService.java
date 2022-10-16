@@ -6,10 +6,14 @@ import com.example.etutorbackend.model.entity.User;
 import com.example.etutorbackend.model.payload.user.UserPayload;
 import com.example.etutorbackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -72,6 +76,21 @@ public class UserService {
         userRepository.save(existingUser);
 
         return SUCCESSFULLY_PROFILE_IMAGE_REMOVED;
+
+    }
+
+    public Page<UserPayload> findUsersForConversationsByUserId(Long userId, int pageNumber, int pageSize) {
+        Page<User> usersForConversationByUserId
+                = userRepository.findUsersForConversationByUserId(userId, PageRequest.of(pageNumber, pageSize));
+
+        return new PageImpl<>(
+                usersForConversationByUserId
+                        .stream()
+                        .map(UserPayloadMapper::mapToUserPayload)
+                        .collect(Collectors.toList()),
+                PageRequest.of(pageNumber, pageSize),
+                usersForConversationByUserId.getTotalElements()
+        );
 
     }
 }
