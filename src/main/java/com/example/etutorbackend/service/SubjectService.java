@@ -1,8 +1,6 @@
 package com.example.etutorbackend.service;
 
 import com.example.etutorbackend.mapper.SubjectSearchPayloadMapper;
-import com.example.etutorbackend.model.entity.Subject;
-import com.example.etutorbackend.model.payload.city.CityQuantityPayload;
 import com.example.etutorbackend.model.payload.subject.SubjectQuantityPayload;
 import com.example.etutorbackend.model.payload.subject.SubjectSearchPayload;
 import com.example.etutorbackend.repository.AdvertisementRepository;
@@ -29,8 +27,9 @@ public class SubjectService {
         List<SubjectQuantityPayload> subjectsWithQuantities = new ArrayList<>();
 
 
-        List<String> subjectsWithQuantitiesSorted
-                = subjectRepository.findSubjectsOrderByAddsQuantityWithLimit(recordsQuantity);
+        List<String> subjectsWithQuantitiesSorted = recordsQuantity > 0
+                ? subjectRepository.findSubjectsOrderByAddsQuantityWithLimit(recordsQuantity)
+                : subjectRepository.findSubjectsOrderByAddsQuantity();
 
         subjectsWithQuantitiesSorted
                 .forEach(subjectWithQuantity -> {
@@ -45,6 +44,4 @@ public class SubjectService {
 
         return subjectsWithQuantities;
     }
-
-
 }

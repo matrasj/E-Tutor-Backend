@@ -60,11 +60,19 @@ public class AdvertisementController {
                 ));
     }
 
+    @GetMapping("/pagination/findByType")
+    public ResponseEntity<Page<AdvertisementPayloadResponse>> getAdvertisementsByType(@RequestParam String type,
+                                                                                      @RequestParam int pageNumber,
+                                                                                      @RequestParam int pageSize) {
+        return ResponseEntity.status(OK)
+                .body(advertisementService.findAdvertisementsByAdvertisementType(type, pageNumber, pageSize));
+    }
+
     @GetMapping("/pagination/findByKeyphraseAndType")
-    public ResponseEntity<Page<AdvertisementPayloadResponse>> getAdvertisementsByKeyphraseAndCategory(@RequestParam String keyPhrase,
-                                                                                                      @RequestParam String type,
-                                                                                                      @RequestParam int pageNumber,
-                                                                                                      @RequestParam int pageSize) {
+    public ResponseEntity<Page<AdvertisementPayloadResponse>> getAdvertisementsByKeyphraseAndType(@RequestParam String keyPhrase,
+                                                                                                  @RequestParam String type,
+                                                                                                  @RequestParam int pageNumber,
+                                                                                                  @RequestParam int pageSize) {
         return ResponseEntity.status(OK)
                 .body(advertisementService.findAdvertisementsByKeyphraseAndType(
                         keyPhrase,

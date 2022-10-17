@@ -8,6 +8,7 @@ import com.example.etutorbackend.model.payload.availibility.AvailabilityPayload;
 import com.example.etutorbackend.model.payload.advertisement.AdvertisementPayloadRequest;
 import com.example.etutorbackend.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import static com.example.etutorbackend.model.entity.AdvertisementType.LOOKING_F
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AdvertisementService {
     private static final String PLACE_NOT_FOUND_MESSAGE = "Not found place with name: %s";
     private static final String LESSON_RANGE_NOT_FOUND_MESSAGE = "Not found lesson range with name: %s";
@@ -120,7 +122,7 @@ public class AdvertisementService {
 
     public Page<AdvertisementPayloadResponse> findAdvertisementsByKeyphrase(String keyPhrase, int pageNumber, int pageSize) {
         Page<Advertisement> advertisementsByKeyphrase
-                = advertisementRepository.findAllByShortDescOrSubjectContaining(keyPhrase, keyPhrase, PageRequest.of(pageNumber, pageSize));
+                = advertisementRepository.findAdvertisementsByShortDescOrSubjectName(keyPhrase, PageRequest.of(pageNumber, pageSize));
 
         return new PageImpl<>(
                 advertisementsByKeyphrase
@@ -131,6 +133,27 @@ public class AdvertisementService {
                 advertisementsByKeyphrase.getTotalElements());
     }
 
+    public Page<AdvertisementPayloadResponse> findAdvertisementsByAdvertisementType(String type, int pageNumber, int pageSize) {
+        AdvertisementType advertisementType = null;
+        switch (type) {
+            case "student" -> advertisementType = LOOKING_FOR_TUTOR;
+            case "tutor" -> advertisementType = LOOKING_FOR_STUDENT;
+        };
+
+        Page<Advertisement> advertisementsByAdvertisementType = advertisementRepository
+                .findByAdvertisementType(advertisementType, PageRequest.of(pageNumber, pageSize));
+
+        return new PageImpl<>(
+                advertisementsByAdvertisementType
+                        .stream()
+                        .map(AdvertisementPayloadResponseMapper::mapToAdvertisementPayloadResponse)
+                        .toList(),
+                PageRequest.of(pageNumber, pageSize),
+                advertisementsByAdvertisementType.getTotalElements());
+
+
+    }
+
     public Page<AdvertisementPayloadResponse> findAdvertisementsByKeyphraseAndType(String keyPhrase, String type, int pageNumber, int pageSize) {
         AdvertisementType advertisementType = null;
         switch (type) {
@@ -139,9 +162,9 @@ public class AdvertisementService {
         }
 
         Page<Advertisement> advertisementsByKeyphraseAndType = advertisementRepository
-                .findByShortDescContainingOrAdvertisementType(
+                .findByShortDescContainingAndAdvertisementType(
                         keyPhrase,
-                        advertisementType,
+                        advertisementType.name(),
                         PageRequest.of(pageNumber, pageSize));
 
         return new PageImpl<>(
@@ -193,6 +216,8 @@ public class AdvertisementService {
                 .map(AdvertisementPayloadResponseMapper::mapToAdvertisementPayloadResponse)
                 .collect(Collectors.toList());
     }
+
+
 
 
 }

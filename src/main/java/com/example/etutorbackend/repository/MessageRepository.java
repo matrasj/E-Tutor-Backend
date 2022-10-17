@@ -17,7 +17,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     Page<Message> findByReceiverIdOrderByCreatedAt(@Param("userId") Long userId, Pageable pageable);
 
     @Query(value = "SELECT * FROM message WHERE (message.receiver_id = :firstUserId AND message.sender_id = :secondUserId)" +
-            "OR (message.sender_id = :firstUserId AND message.receiver_id = :secondUserId) ORDER BY created_at DESC\n", nativeQuery = true)
+            "OR (message.sender_id = :firstUserId AND message.receiver_id = :secondUserId) ORDER BY created_at ASC\n", nativeQuery = true)
     List<Message> findMessagesForConversation(@Param("firstUserId") Long firstUserId, @Param("secondUserId") Long secondUserId);
 
 }

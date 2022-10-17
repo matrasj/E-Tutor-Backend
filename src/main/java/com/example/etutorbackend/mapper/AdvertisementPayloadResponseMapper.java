@@ -32,6 +32,7 @@ public class AdvertisementPayloadResponseMapper {
                 .advertisementType(advertisement.getAdvertisementType())
                 .reviewsQuantity(advertisement.getReviews().size())
                 .ratingAverage(RatingService.calculateAverage(advertisement.getReviews()))
+                .createdAt(advertisement.getCreatedAt())
                 .build();
     }
 }

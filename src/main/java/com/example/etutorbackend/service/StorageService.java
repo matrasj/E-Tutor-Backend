@@ -8,7 +8,7 @@ import java.io.IOException;
 
 @Service
 public class StorageService {
-    private final static String FOLDER_PATH = "C:\\Users\\jkobm\\WebstormProjects\\ETutorFrontned\\src\\";
+    private final static String FOLDER_PATH = "C:\\Users\\jkobm\\WebstormProjects\\E-Tutor-Frontend\\src\\";
     public String uploadProfileImageToFileSystem(MultipartFile multipartFile) throws IOException {
         String fileName = System.currentTimeMillis() + multipartFile.getOriginalFilename();
 

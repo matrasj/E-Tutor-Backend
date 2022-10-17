@@ -5,6 +5,7 @@ import com.example.etutorbackend.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.security.config.Elements.AUTHENTICATION_MANAGER;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -55,13 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers("/api/v1/auth/**")
+                .antMatchers( "/api/v1/auth/**")
                 .permitAll()
-                .antMatchers("/api/v1/advertisements/**")
-                .permitAll()
-                .antMatchers("/api/v1/cities/**")
-                .permitAll()
-                .antMatchers("/api/v1/subjects/**")
+                .antMatchers(GET, "/api/v1/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

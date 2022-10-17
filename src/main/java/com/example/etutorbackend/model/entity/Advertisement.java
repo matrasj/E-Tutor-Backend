@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static javax.persistence.CascadeType.*;
@@ -38,6 +41,14 @@ public class Advertisement {
 
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
+
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "last_updated")
+    private Date lastUpdated;
 
     @ManyToOne
     @JoinColumn(name = "subject_id", referencedColumnName = "id")

@@ -20,4 +20,10 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
             "LIMIT :limit", nativeQuery = true)
     List<String> findSubjectsOrderByAddsQuantityWithLimit(int limit);
 
+    @Query(value = "SELECT subject.name , \n" +
+            " (SELECT COUNT(advertisement.id) FROM advertisement WHERE advertisement.subject_id = subject.id) AS addsCount\n" +
+            "FROM subject\n" +
+            "ORDER BY addsCount DESC", nativeQuery = true)
+    List<String> findSubjectsOrderByAddsQuantity();
+
 }

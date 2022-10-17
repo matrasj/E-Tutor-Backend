@@ -30,4 +30,6 @@ public class SubjectController {
         return ResponseEntity.status(OK)
                 .body(subjectService.findSubjectsWithQuantities(recordsQuantity));
     }
+
+
 }

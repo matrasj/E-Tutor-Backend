@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -30,5 +31,6 @@ public class AdvertisementPayloadResponse {
     private List<String> lessonRanges = new ArrayList<>();
     private AdvertisementType advertisementType;
     public int reviewsQuantity;
-    public BigDecimal ratingAverage;
+    private BigDecimal ratingAverage;
+    private Date createdAt;
 }
