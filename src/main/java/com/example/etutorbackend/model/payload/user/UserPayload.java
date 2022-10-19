@@ -21,6 +21,7 @@ public class UserPayload {
     private int advertisementsForTutorQuantity;
     private int advertisementsForStudentQuantity;
     private String profileImagePath;
+    private int newMessagesQuantity;
 
 
 }

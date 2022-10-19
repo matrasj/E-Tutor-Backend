@@ -28,6 +28,7 @@ public class MessageService {
     private static final String RECIPIENT_NOT_FOUND_MESSAGE = "Not found recipient with id %d";
     private static final String ADVERTISEMENT_NOT_FOUND_MESSAGE = "Not found advertisement with id %d";
     private static final String SUCCESSFULLY_MESSAGE_CREATION = "Successfully created message";
+    private static final boolean MESSAGE_SEEN = true;
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final AdvertisementRepository advertisementRepository;
@@ -61,9 +62,15 @@ public class MessageService {
     }
 
 
+    @Transactional
     public List<MessagePayloadResponse> findAllMessagesForConversationByIds(Long firstUserId, Long secondUserId) {
         List<Message> messagesForConversation
                 = messageRepository.findMessagesForConversation(firstUserId, secondUserId);
+
+        messagesForConversation
+                .forEach((message -> message.setSeen(MESSAGE_SEEN)));
+
+        messageRepository.saveAll(messagesForConversation);
 
         return messagesForConversation
                 .stream()

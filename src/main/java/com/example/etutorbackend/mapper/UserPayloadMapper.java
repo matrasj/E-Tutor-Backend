@@ -31,6 +31,11 @@ public class UserPayloadMapper {
                         .toList()
                         .size())
                 .profileImagePath(user.getProfileImagePath())
+                .newMessagesQuantity(user.getMessagesReceived()
+                        .stream()
+                        .filter((message -> !message.isSeen()))
+                        .toList()
+                        .size())
                 .build();
     }
 }

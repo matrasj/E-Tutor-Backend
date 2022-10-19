@@ -156,24 +156,35 @@ public class AdvertisementService {
 
     public Page<AdvertisementPayloadResponse> findAdvertisementsByKeyphraseAndType(String keyPhrase, String type, int pageNumber, int pageSize) {
         AdvertisementType advertisementType = null;
+        System.out.println(type);
+
         switch (type) {
             case "student" -> advertisementType = LOOKING_FOR_TUTOR;
             case "tutor" -> advertisementType = LOOKING_FOR_STUDENT;
         }
 
-        Page<Advertisement> advertisementsByKeyphraseAndType = advertisementRepository
-                .findByShortDescContainingAndAdvertisementType(
-                        keyPhrase,
-                        advertisementType.name(),
-                        PageRequest.of(pageNumber, pageSize));
+        Page<Advertisement> advertisements = null;
+
+        if (type.equals("all")) {
+            advertisements = advertisementRepository
+                    .findByShortDescOrCategoryContaining(
+                            keyPhrase,
+                            PageRequest.of(pageNumber, pageSize));
+        } else {
+            advertisements = advertisementRepository
+                    .findByShortDescOrCategoryAndAdvertisementTypeContaining(
+                            keyPhrase,
+                            advertisementType.name(),
+                            PageRequest.of(pageNumber, pageSize));
+        }
 
         return new PageImpl<>(
-                advertisementsByKeyphraseAndType
+                advertisements
                         .stream()
                         .map(AdvertisementPayloadResponseMapper::mapToAdvertisementPayloadResponse)
                         .toList(),
                 PageRequest.of(pageNumber, pageSize),
-                advertisementsByKeyphraseAndType.getTotalElements());
+                advertisements.getTotalElements());
 
     }
 
