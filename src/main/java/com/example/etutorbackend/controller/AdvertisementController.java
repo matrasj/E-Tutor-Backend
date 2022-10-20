@@ -88,6 +88,18 @@ public class AdvertisementController {
                 .body(advertisementService.findAdvertisementsByUserId(userId));
     }
 
+    @GetMapping("/limit/{limit}")
+    public ResponseEntity<List<AdvertisementPayloadResponse>> getAdvertisementForHomePage(@PathVariable int limit) {
+        return ResponseEntity.status(OK)
+                .body(advertisementService.findAdvertisementForHomePageWithLimit(limit));
+    }
+
+    @GetMapping("/totalQuantity")
+    public ResponseEntity<Integer> getAdvertisementsTotalQuantity() {
+        return ResponseEntity.status(OK)
+                .body(advertisementService.findAdvertisementsTotalQuantity());
+    }
+
 
 }
 

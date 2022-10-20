@@ -65,7 +65,12 @@ public interface AdvertisementRepository extends JpaRepository<Advertisement, Lo
     Page<Advertisement> findAllByCityName(@Param("cityName") String cityName, Pageable pageable);
 
     Page<Advertisement> findByAdvertisementType(@Param("advertisementType") AdvertisementType advertisementType, Pageable pageable);
-
+    @Query(value = "SELECT advertisement.id, advertisement.advertisement_type, advertisement.content,\n" +
+            "advertisement.minutes_duration, advertisement.price, advertisement.short_desc, advertisement.city_id,\n" +
+            "advertisement.subject_id, advertisement.user_id, advertisement.created_at, advertisement.last_updated\n" +
+            " FROM advertisement INNER JOIN review on review.advertisement_id = advertisement.id\n" +
+            "GROUP BY advertisement.id ORDER BY COUNT(*) DESC LIMIT :limit", nativeQuery = true)
+    List<Advertisement> findAdvertisementsForHomePage(@Param("limit") int limit);
 
 }
 

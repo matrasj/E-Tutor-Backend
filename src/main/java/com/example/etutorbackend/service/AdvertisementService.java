@@ -229,6 +229,14 @@ public class AdvertisementService {
     }
 
 
+    public List<AdvertisementPayloadResponse> findAdvertisementForHomePageWithLimit(int limit) {
+        return advertisementRepository.findAdvertisementsForHomePage(limit)
+                .stream()
+                .map(AdvertisementPayloadResponseMapper::mapToAdvertisementPayloadResponse)
+                .toList();
+    }
 
-
+    public int findAdvertisementsTotalQuantity() {
+        return this.advertisementRepository.findAll().size();
+    }
 }
