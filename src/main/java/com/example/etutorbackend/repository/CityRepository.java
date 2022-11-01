@@ -23,4 +23,10 @@ public interface CityRepository extends JpaRepository<City, Long> {
     @Query(value = "SELECT city.name,  (SELECT COUNT(advertisement.id) FROM advertisement WHERE advertisement.city_id = city.id) AS addsQuantity FROM \n" +
             "city, state WHERE city.state_id = state.id AND state.id = :stateId ORDER BY addsQuantity DESC;", nativeQuery = true)
     List<String> findCitiesByStateWithAddsQuantity(@Param("stateId") Long stateId);
+
+    @Query(nativeQuery = true, value = "SELECT city.name , \n" +
+            " (SELECT COUNT(advertisement.id) FROM advertisement WHERE advertisement.city_id = city.id) AS addsCount\n" +
+            "FROM city\n" +
+            "ORDER BY addsCount DESC\n")
+    List<String> findAllCitiesWithAddsQuantities();
 }

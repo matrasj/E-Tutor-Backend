@@ -1,8 +1,10 @@
 package com.example.etutorbackend.service;
 
 import com.example.etutorbackend.exception.*;
+import com.example.etutorbackend.mapper.AdvertisementLightPayloadMapper;
 import com.example.etutorbackend.mapper.AdvertisementPayloadResponseMapper;
 import com.example.etutorbackend.model.entity.*;
+import com.example.etutorbackend.model.payload.advertisement.AdvertisementLightPayload;
 import com.example.etutorbackend.model.payload.advertisement.AdvertisementPayloadResponse;
 import com.example.etutorbackend.model.payload.availibility.AvailabilityPayload;
 import com.example.etutorbackend.model.payload.advertisement.AdvertisementPayloadRequest;
@@ -229,10 +231,10 @@ public class AdvertisementService {
     }
 
 
-    public List<AdvertisementPayloadResponse> findAdvertisementForHomePageWithLimit(int limit) {
+    public List<AdvertisementLightPayload> findAdvertisementForHomePageWithLimit(int limit) {
         return advertisementRepository.findAdvertisementsForHomePage(limit)
                 .stream()
-                .map(AdvertisementPayloadResponseMapper::mapToAdvertisementPayloadResponse)
+                .map(AdvertisementLightPayloadMapper::mapTopAdvertisementLightPayload)
                 .toList();
     }
 

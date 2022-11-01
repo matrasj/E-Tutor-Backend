@@ -1,7 +1,6 @@
 package com.example.etutorbackend.service;
 
 import com.example.etutorbackend.mapper.CityPayloadMapper;
-import com.example.etutorbackend.model.entity.City;
 import com.example.etutorbackend.model.payload.city.CityPayload;
 import com.example.etutorbackend.model.payload.city.CityQuantityPayload;
 import com.example.etutorbackend.repository.CityRepository;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +20,29 @@ public class CityService {
 
         List<String> citiesWithQuantitiesSorted = cityRepository.findCitiesOrderByAddsQuantityWithLimit(recordsQuantity);
 
+        mapCitiesWithQuantitiesAsStringToCityQuantityPayloads(cityQuantityPayloads, citiesWithQuantitiesSorted);
+
+        return cityQuantityPayloads;
+    }
+
+    public List<CityPayload> findAllCities() {
+        return cityRepository.findAll()
+                .stream()
+                .map(CityPayloadMapper::mapToCityPayload)
+                .toList();
+    }
+
+    public List<CityQuantityPayload> findAllCitiesWithQuantities() {
+        List<CityQuantityPayload> cityQuantityPayloads = new ArrayList<>();
+
+        List<String> citiesWithQuantitiesSorted = cityRepository.findAllCitiesWithAddsQuantities();
+
+        mapCitiesWithQuantitiesAsStringToCityQuantityPayloads(cityQuantityPayloads, citiesWithQuantitiesSorted);
+
+        return cityQuantityPayloads;
+    }
+
+    private static void mapCitiesWithQuantitiesAsStringToCityQuantityPayloads(List<CityQuantityPayload> cityQuantityPayloads, List<String> citiesWithQuantitiesSorted) {
         citiesWithQuantitiesSorted
                 .forEach(cityWithQuantity -> {
                     String[] cityAndQuantity = cityWithQuantity.split(",");
@@ -32,14 +53,5 @@ public class CityService {
                             )
                     );
                 });
-
-        return cityQuantityPayloads;
-    }
-
-    public List<CityPayload> findAllCities() {
-        return cityRepository.findAll()
-                .stream()
-                .map(CityPayloadMapper::mapToCityPayload)
-                .toList();
     }
 }

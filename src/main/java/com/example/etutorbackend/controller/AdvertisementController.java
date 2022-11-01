@@ -1,5 +1,6 @@
 package com.example.etutorbackend.controller;
 
+import com.example.etutorbackend.model.payload.advertisement.AdvertisementLightPayload;
 import com.example.etutorbackend.model.payload.advertisement.AdvertisementPayloadRequest;
 import com.example.etutorbackend.model.payload.advertisement.AdvertisementPayloadResponse;
 import com.example.etutorbackend.service.AdvertisementService;
@@ -89,17 +90,14 @@ public class AdvertisementController {
     }
 
     @GetMapping("/limit/{limit}")
-    public ResponseEntity<List<AdvertisementPayloadResponse>> getAdvertisementForHomePage(@PathVariable int limit) {
+    public ResponseEntity<List<AdvertisementLightPayload>> getAdvertisementForHomePage(@PathVariable int limit) {
         return ResponseEntity.status(OK)
                 .body(advertisementService.findAdvertisementForHomePageWithLimit(limit));
     }
-
-    @GetMapping("/totalQuantity")
+    @GetMapping("/total-quantity")
     public ResponseEntity<Integer> getAdvertisementsTotalQuantity() {
         return ResponseEntity.status(OK)
                 .body(advertisementService.findAdvertisementsTotalQuantity());
     }
-
-
 }
 

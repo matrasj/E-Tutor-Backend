@@ -4,7 +4,6 @@ import com.example.etutorbackend.model.payload.city.CityPayload;
 import com.example.etutorbackend.model.payload.city.CityQuantityPayload;
 import com.example.etutorbackend.service.CityService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +20,15 @@ import static org.springframework.http.HttpStatus.OK;
 public class CityController {
     private final CityService cityService;
     @GetMapping("/cities-quantities")
-    public ResponseEntity<List<CityQuantityPayload>> getCitiesWithQuantities(@RequestParam int recordsQuantity) {
+    public ResponseEntity<List<CityQuantityPayload>> getCitiesWithAddsQuantitiesWithLimit(@RequestParam int recordsQuantity) {
         return ResponseEntity.status(OK)
                 .body(cityService.findCitiesWithQuantities(recordsQuantity));
+    }
+
+    @GetMapping("/cities-quantities/all")
+    public ResponseEntity<List<CityQuantityPayload>> getAllCitiesWithAddsQuantities() {
+        return ResponseEntity.status(OK)
+                .body(cityService.findAllCitiesWithQuantities());
     }
 
     @GetMapping
