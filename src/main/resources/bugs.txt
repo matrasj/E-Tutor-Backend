@@ -1,1 +1,0 @@
-1. I can not put limit in native query in repo dynamically
