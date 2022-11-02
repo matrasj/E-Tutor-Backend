@@ -5,5 +5,9 @@ For storing data I used MySQL database. For sending email confirmations I used M
 
 Main purpose of application is to create place in web where we can post advertisements about tutoring. We can post advertisement either as a person who wants to teach and also who needs help.
 
-More info about project and screenshots you can find in frontend repo written with help of Angular framework here -> https://github.com/pozerinhooo/E-Tutor-FrontEnd 
+More info about project and screenshots you can find in frontend repo written with help of Angular framework here -> https://github.com/pozerinhooo/E-Tutor-FrontEnd
+
+# Logical view ( used drawSQL )
+![image](https://user-images.githubusercontent.com/95829811/199421040-a8b5f678-e79c-4974-8a82-40b8159b9c11.png)
+
 
