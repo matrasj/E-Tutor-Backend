@@ -27,7 +27,7 @@ public class LoggingAspect {
 
     @Before(value = "forAppFlow()")
     public void loggingBeforeEachMethodCall(JoinPoint joinPoint) {
-        String methodName = joinPoint.getSignature().toString();
+        String methodName = joinPoint.getSignature().getName();
         Object[] args = joinPoint.getArgs();
 
         log.info("Before calling method: " + methodName);
@@ -38,7 +38,7 @@ public class LoggingAspect {
 
     @AfterReturning(pointcut = "forAppFlow()", returning = "result")
     public void loggingAfterEachMethodReturning(JoinPoint joinPoint, Object result) {
-        String methodName = joinPoint.getSignature().toString();
+        String methodName = joinPoint.getSignature().getName();
 
         log.info("After calling method: " + methodName);
         log.info("Result from calling method: " + methodName + " is: " + result.toString());
