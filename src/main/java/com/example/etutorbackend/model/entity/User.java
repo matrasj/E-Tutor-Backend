@@ -1,5 +1,6 @@
 package com.example.etutorbackend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,7 +12,8 @@ import java.util.*;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -61,19 +63,26 @@ public class User {
     @Column(name = "last_updated")
     private Date lastUpdated;
 
+
+
     @OneToMany(cascade = ALL, mappedBy = "user")
+    
     private Set<ConfirmationToken> confirmationTokens = new HashSet<>();
 
     @OneToMany(cascade = ALL, mappedBy = "user")
+    
     private List<Advertisement> advertisements = new ArrayList<>();
 
     @OneToMany(cascade = ALL, mappedBy = "user")
+    
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "receiver")
+    
     private List<Message> messagesReceived = new ArrayList<>();
 
     @OneToMany(mappedBy = "sender")
+    
     private List<Message> messagesSent = new ArrayList<>();
 
 

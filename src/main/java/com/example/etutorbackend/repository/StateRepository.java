@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StateRepository extends JpaRepository<State, Long> {
@@ -15,6 +16,8 @@ public interface StateRepository extends JpaRepository<State, Long> {
             "AND state.id = :stateId\n" +
             "GROUP BY state.id", nativeQuery = true)
     int citiesNumberForStateId(@Param("stateId") Long stateId);
+
+    Optional<State> findByName(@Param("name") String name);
 
 
 }

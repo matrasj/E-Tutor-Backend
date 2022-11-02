@@ -1,9 +1,7 @@
 package com.example.etutorbackend.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,7 +16,8 @@ import static javax.persistence.CascadeType.*;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -52,12 +51,14 @@ public class Advertisement {
 
     @ManyToOne
     @JoinColumn(name = "subject_id", referencedColumnName = "id")
+    
     private Subject subject;
 
     @ManyToOne(cascade = {
             DETACH, MERGE, PERSIST, REFRESH
     })
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    
     private User user;
 
     @ManyToMany(cascade = {
@@ -66,6 +67,7 @@ public class Advertisement {
     @JoinTable(name = "advertisement_place",
     joinColumns = @JoinColumn(name = "advertisement_id", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "place_id", referencedColumnName = "id"))
+    
     private List<Place> places = new ArrayList<>();
 
     @ManyToOne(cascade = {
@@ -81,6 +83,7 @@ public class Advertisement {
             joinColumns = @JoinColumn(name = "advertisement_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "range_id", referencedColumnName = "id")
     )
+    
     private List<LessonRange> lessonRanges = new ArrayList<>();
 
     @Column(name = "advertisement_type")

@@ -1,5 +1,6 @@
 package com.example.etutorbackend.service;
 
+import com.example.etutorbackend.model.entity.State;
 import com.example.etutorbackend.model.payload.city.CityQuantityPayload;
 import com.example.etutorbackend.model.payload.state.StatePayloadResponse;
 import com.example.etutorbackend.repository.CityRepository;
@@ -46,5 +47,9 @@ public class StateService {
                 }));
 
         return statePayloadResponses;
+    }
+
+    public List<State> findAllStates() {
+        return stateRepository.findAll();
     }
 }
