@@ -8,6 +8,6 @@ Main purpose of application is to create place in web where we can post advertis
 More info about project and screenshots you can find in frontend repo written with help of Angular framework here -> https://github.com/pozerinhooo/E-Tutor-FrontEnd
 
 # Logical view ( used drawSQL )
-![image](https://user-images.githubusercontent.com/95829811/199421040-a8b5f678-e79c-4974-8a82-40b8159b9c11.png)
+![image](https://user-images.githubusercontent.com/95829811/199782798-785e658c-dbe0-41a5-aab7-b9307811b0fc.png)
 
 
