@@ -17,6 +17,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/api/v1/advertisements")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class AdvertisementController {
     private final AdvertisementService advertisementService;
     @PostMapping

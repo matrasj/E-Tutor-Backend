@@ -8,8 +8,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
@@ -85,5 +88,22 @@ public class User {
     
     private List<Message> messagesSent = new ArrayList<>();
 
+    @ManyToMany(cascade = ALL)
+    @JoinTable(name = "user_role",
+        joinColumns = {
+            @JoinColumn(name = "user_id", referencedColumnName = "id")
+        },
+        inverseJoinColumns = {
+            @JoinColumn(name = "role_id", referencedColumnName = "id")
+        }
+    )
+    private Set<Role> roles = new HashSet<>();
 
+    public Set<Authority> getAuthorities() {
+        return roles
+                .stream()
+                .map(Role::getAuthorities)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
+    }
 }

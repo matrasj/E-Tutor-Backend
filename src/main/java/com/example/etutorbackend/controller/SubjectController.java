@@ -5,10 +5,7 @@ import com.example.etutorbackend.model.payload.subject.SubjectSearchPayload;
 import com.example.etutorbackend.service.SubjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +14,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/api/v1/subjects")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class SubjectController {
     private final SubjectService subjectService;
     @GetMapping

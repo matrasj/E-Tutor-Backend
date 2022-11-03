@@ -1,7 +1,12 @@
 package com.example.etutorbackend.config;
 
+import com.example.etutorbackend.jwt.JwtTokenFilterConfig;
+import com.example.etutorbackend.jwt.JwtTokenProvider;
 import com.example.etutorbackend.repository.UserRepository;
 
+import com.example.etutorbackend.service.UserService;
+import com.example.etutorbackend.service.auth.ApplicationUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -25,35 +30,25 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserDetailsService userDetailsService;
-    private final UserRepository userRepository;
-    private final AuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private UserDetailsService userDetailsService;
+    private JwtTokenProvider jwtTokenProvider;
 
-    @Lazy
-    public SecurityConfig( UserDetailsService userDetailsService,
-                           UserRepository userRepository,
-                           JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-                           JwtAuthenticationFilter jwtAuthenticationFilter) {
+
+    @Autowired
+    public void setUserService(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-        this.userRepository = userRepository;
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-
-    @Bean(AUTHENTICATION_MANAGER)
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    @Autowired
+    public void setJwtTokenProvider(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors();
-        http.csrf().disable();
+        http.cors().and().csrf().disable();
+        http.headers().frameOptions().sameOrigin();
 
         http
                 .authorizeRequests()
@@ -62,19 +57,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(GET, "/api/v1/**")
                 .permitAll()
                 .anyRequest()
-                .authenticated()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
-                .sessionManagement().sessionCreationPolicy(STATELESS);
+                .authenticated();
 
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.apply(new JwtTokenFilterConfig(jwtTokenProvider));
+
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean

@@ -17,6 +17,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RestController
 @RequestMapping("/api/v1/messages")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class MessageController {
     private final MessageService messageService;
     @PostMapping
