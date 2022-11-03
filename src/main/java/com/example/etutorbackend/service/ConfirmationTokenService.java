@@ -7,7 +7,6 @@ import com.example.etutorbackend.model.entity.ConfirmationToken;
 import com.example.etutorbackend.repository.ConfirmationTokenRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,13 +27,7 @@ public class ConfirmationTokenService {
         ConfirmationToken confirmationToken = confirmationTokenRepository.findByToken(token)
                 .orElseThrow(() -> new ConfirmationTokenNotFoundException(String.format(CONFIRMATION_TOKEN_NOT_FOUND_MESSAGE, token)));
 
-        if (confirmationToken.getConfirmedAt() != null) {
-            throw new ConfirmationTokenAlreadyConfirmedException(String.format(CONFIRMATION_TOKEN_ALREADY_CONFIRMED_MESSAGE, token));
-        }
-
-        if (confirmationToken.getExpireAt().isBefore(LocalDateTime.now())) {
-            throw new ConfirmationTokenAlreadyExpiredException(String.format(CONFIRMATION_TOKEN_ALREADY_EXPIRED_MESSAGE, token));
-        }
+        validateConfirmationToken(token, confirmationToken);
 
         confirmationToken.setConfirmedAt(LocalDateTime.now());
         confirmationToken.getUser().setEnabled(ENABLE_ACCOUNT);
@@ -42,5 +35,15 @@ public class ConfirmationTokenService {
         confirmationTokenRepository.save(confirmationToken);
 
         return SUCCESSFULLY_TOKEN_CONFIRMATION;
+    }
+
+    private static void validateConfirmationToken(String token, ConfirmationToken confirmationToken) {
+        if (confirmationToken.getConfirmedAt() != null) {
+            throw new ConfirmationTokenAlreadyConfirmedException(String.format(CONFIRMATION_TOKEN_ALREADY_CONFIRMED_MESSAGE, token));
+        }
+
+        if (confirmationToken.getExpireAt().isBefore(LocalDateTime.now())) {
+            throw new ConfirmationTokenAlreadyExpiredException(String.format(CONFIRMATION_TOKEN_ALREADY_EXPIRED_MESSAGE, token));
+        }
     }
 }

@@ -35,6 +35,9 @@ public class ConfirmationToken {
     @Column(name = "confirmed_at")
     private LocalDateTime confirmedAt;
 
+    @Column(name = "minutes_duration")
+    private int minutesDuration;
+
     @ManyToOne
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private User user;

@@ -21,20 +21,20 @@ import static org.springframework.http.HttpStatus.OK;
 public class AuthController {
     private final AuthService authService;
 
-//    @PostMapping("/registration")
-//    public ResponseEntity<RegisterPayloadResponse> register(@RequestBody RegisterPayloadRequest registerPayloadRequest) {
-//        return ResponseEntity.status(CREATED)
-//                .body(authService.registerUser(registerPayloadRequest));
-//    }
+    @PostMapping("/registration")
+    public ResponseEntity<RegisterPayloadResponse> register(@RequestBody RegisterPayloadRequest registerPayloadRequest) {
+        return ResponseEntity.status(CREATED)
+                .body(authService.registerUser(registerPayloadRequest));
+    }
     @PostMapping("/login")
     public ResponseEntity<LoginPayloadResponse> login(@RequestBody LoginPayloadRequest loginPayloadRequest)  {
         return ResponseEntity.status(OK)
                 .body(authService.loginUser(loginPayloadRequest));
     }
 
-//    @GetMapping("/confirmation")
-//    public ResponseEntity<String> confirmAccount(@RequestParam String token) {
-//        return ResponseEntity.status(OK)
-//                .body(authService.confirmAccountByToken(token));
-//    }
+    @GetMapping("/confirmation")
+    public ResponseEntity<String> confirmAccount(@RequestParam String token) {
+        return ResponseEntity.status(OK)
+                .body(authService.confirmAccountByToken(token));
+    }
 }
