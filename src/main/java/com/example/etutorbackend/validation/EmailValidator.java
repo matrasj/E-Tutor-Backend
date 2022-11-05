@@ -8,6 +8,6 @@ import java.util.function.Predicate;
 public class EmailValidator implements Predicate<String> {
     @Override
     public boolean test(String email) {
-        return email.contains("@");
+        return email.matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$");
     }
 }

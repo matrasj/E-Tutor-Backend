@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.nio.file.AccessDeniedException;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -22,12 +23,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/registration")
-    public ResponseEntity<RegisterPayloadResponse> register(@RequestBody RegisterPayloadRequest registerPayloadRequest) {
+    public ResponseEntity<RegisterPayloadResponse> register(@RequestBody @Valid RegisterPayloadRequest registerPayloadRequest) {
         return ResponseEntity.status(CREATED)
                 .body(authService.registerUser(registerPayloadRequest));
     }
     @PostMapping("/login")
-    public ResponseEntity<LoginPayloadResponse> login(@RequestBody LoginPayloadRequest loginPayloadRequest)  {
+    public ResponseEntity<LoginPayloadResponse> login(@RequestBody @Valid LoginPayloadRequest loginPayloadRequest)  {
         return ResponseEntity.status(OK)
                 .body(authService.loginUser(loginPayloadRequest));
     }

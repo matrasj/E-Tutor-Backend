@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -21,7 +22,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class AdvertisementController {
     private final AdvertisementService advertisementService;
     @PostMapping
-    public ResponseEntity<String> createAdvertisement(@RequestBody AdvertisementPayloadRequest advertisementPayload) {
+    public ResponseEntity<String> createAdvertisement(@RequestBody @Valid AdvertisementPayloadRequest advertisementPayload) {
         return ResponseEntity.status(CREATED)
                 .body(advertisementService.createAdvertisement(advertisementPayload));
     }
