@@ -20,9 +20,7 @@ public class AdvertisementPayloadRequest {
     private Long authorId;
     @NotBlank(message = "Subject name field is required")
     private String subjectName;
-    @NotBlank(message = "Price field is required")
     private BigDecimal price;
-    @NotBlank(message = "Minutes duration field is required")
     private int minutesDuration;
     private List<String> placesNames = new ArrayList<>();
     @NotBlank(message = "Short description field is required")
@@ -33,7 +31,6 @@ public class AdvertisementPayloadRequest {
     private String cityName;
     private List<AvailabilityPayload> availabilityPayloads = new ArrayList<>();
     private List<String> lessonRanges = new ArrayList<>();
-    @NotBlank(message = "Advertisement type field is required")
     private AdvertisementType advertisementType;
     private String authorImageLink;
 

@@ -16,9 +16,7 @@ public class MessagePayloadRequest {
     public String subject;
     @NotBlank(message = "Content is required")
     private String content;
-    @NotBlank(message = "Sender is is required")
     private Long senderId;
-    @NotBlank(message = "Receiver id is required")
     private Long receiverId;
 }
 
