@@ -72,11 +72,11 @@ class AuthControllerTest {
 
         assertAll(
                 () -> assertEquals("pozerinhooo", user.getUsername() , "Username failed"),
-                () -> assertEquals("Czajnik13!", user.getPassword(), "Password failed"),
+                () -> assertEquals("password", user.getPassword(), "Password failed"),
                 () -> assertEquals("jkob.matras@gmail.com", user.getEmail(), "Mail failed")
         );
 
-        var loginRequest = new LoginPayloadRequest("pozerinhooo", "Czajnik13!");
+        var loginRequest = new LoginPayloadRequest("pozerinhooo", "password");
         UserDetails userDetails = new UserPrincipal(user);
         String loginRequestJson = objectMapper.writeValueAsString(loginRequest);
 
@@ -101,7 +101,7 @@ class AuthControllerTest {
         return User.builder()
                 .id(1L)
                 .username("pozerinhooo")
-                .password("Czajnik13!")
+                .password("password")
                 .phoneNumber("admin")
                 .email("jkob.matras@gmail.com")
                 .firstName("Admin")
