@@ -70,7 +70,7 @@ class AuthControllerTest {
     void login() throws Exception {
         User user = getUser();
 
-        assertAll(
+        assertAll("Properties test",
                 () -> assertEquals("pozerinhooo", user.getUsername() , "Username failed"),
                 () -> assertEquals("password", user.getPassword(), "Password failed"),
                 () -> assertEquals("jkob.matras@gmail.com", user.getEmail(), "Mail failed")
